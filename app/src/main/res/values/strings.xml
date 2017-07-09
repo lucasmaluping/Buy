@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Buy</string>
+    <string name="indxe">首页</string>
+    <string name="category">分类</string>
+    <string name="cart">购物车</string>
+    <string name="mine">我的</string>
+</resources>
