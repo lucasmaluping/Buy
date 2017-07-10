@@ -1,17 +1,24 @@
 package com.lucas.buy.utils;
 
+import android.content.ContentUris;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.lucas.buy.MyCallBack;
+import com.lucas.buy.interfaces.LoginCallBack;
+import com.lucas.buy.interfaces.MyCallBack;
 import com.lucas.buy.actiivities.MyApplication;
+import com.lucas.buy.contents.UserContents;
 import com.lucas.buy.domain.Customer;
+import com.lucas.buy.interfaces.RegistCallBack;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 111 on 2017/7/8.
@@ -49,5 +56,64 @@ public class VolleyUtil {
         MyApplication.getRequestQueue().add(stringRequest);
     }
 
+    public void login(final String name, final String password, final LoginCallBack callBack) {
 
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UserContents.loginUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i(TAG,"...response:" + response);
+                if (response.equals(UserContents.ok)) {
+                    callBack.success(UserContents.ok);
+                } else {
+                    callBack.errr(UserContents.error);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,"...error:" + error);
+                callBack.errr(UserContents.error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("name",name);
+                map.put("password", password);
+                return map;
+            }
+        };
+
+        stringRequest.setTag(VOLLEY_TAG);
+        MyApplication.getRequestQueue().add(stringRequest);
+    }
+
+
+    public void regist(final String name, final String password, final String age, final String gender, final RegistCallBack callBack) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UserContents.registUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i(TAG,"...response:" + response);
+                callBack.registSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,"...error:" + error);
+                callBack.registError(error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", name);
+                map.put("password", password);
+                map.put("age", age);
+                map.put("gender", gender);
+                return map;
+            }
+        };
+        stringRequest.setTag(VOLLEY_TAG);
+        MyApplication.getRequestQueue().add(stringRequest);
+    }
 }

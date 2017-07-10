@@ -7,35 +7,40 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.lucas.buy.MyCallBack;
+import com.lucas.buy.interfaces.LoginCallBack;
+import com.lucas.buy.interfaces.MyCallBack;
 import com.lucas.buy.R;
 import com.lucas.buy.domain.Customer;
 import com.lucas.buy.utils.VolleyUtil;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MyCallBack{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, MyCallBack {
     private static final String TAG = "MainActivity";
     private EditText nameEdit;
     private EditText passEdit;
     private Button btnLogin;
-    private Button btnCancel;
+    private Button btnRegist;
     private String name;
     private String pass;
-    private String url = "http://172.16.8.253:8080/LucasWeb2/querysss.do";
+    private String url = "http://172.16.8.253:8080/LucasWeb2/queryUser.do";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         nameEdit = (EditText) findViewById(R.id.name_edit);
         passEdit = (EditText) findViewById(R.id.pass_edit);
-        btnCancel = (Button) findViewById(R.id.btn_cancel);
+        btnRegist = (Button) findViewById(R.id.btn_regist);
         btnLogin = (Button) findViewById(R.id.btn_login);
-        btnCancel.setOnClickListener(this);
+        btnRegist.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
 
     }
@@ -44,26 +49,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                VolleyUtil.getInstance().getVolleyDataGet(url, MainActivity.this);
+//                VolleyUtil.getInstance().getVolleyDataGet(url, MainActivity.this);
                 name = nameEdit.getText().toString().trim();
                 pass = passEdit.getText().toString().trim();
 
-                if (name.equals("lucas") && pass.equals("1234")) {
-                    Intent intent = new Intent(this, HomeActivty.class);
-                    startActivity(intent);
-                }
+
+                VolleyUtil.getInstance().login(name, pass, new LoginCallBack() {
+                    @Override
+                    public void success(String info) {
+
+                        Intent intent = new Intent(MainActivity.this, HomeActivty.class);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void errr(String error) {
+                        Toast.makeText(MainActivity.this, "无此用户", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 break;
-            case R.id.btn_cancel:
-
+            case R.id.btn_regist:
+                    Intent intent = new Intent(MainActivity.this, RegistActivity.class);
+                    startActivity(intent);
                 break;
         }
     }
 
     @Override
     public void success(List<Customer> customers) {
-        for(Customer customer : customers) {
-            Log.i(TAG,"...name:" + customer.getName());
+        for (Customer customer : customers) {
+            Log.i(TAG, "...name:" + customer.getName());
         }
     }
 

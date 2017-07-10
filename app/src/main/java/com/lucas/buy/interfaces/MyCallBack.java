@@ -1,4 +1,4 @@
-package com.lucas.buy;
+package com.lucas.buy.interfaces;
 
 import com.android.volley.VolleyError;
 import com.lucas.buy.domain.Customer;

@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".actiivities.HomeActivty"></activity>
+        <activity android:name=".actiivities.RegistActivity"></activity>
     </application>
 
 </manifest>
