@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnCancel;
     private String name;
     private String pass;
-    private String url = "http://172.16.8.253:8080/LucasWeb2/query.do";
+    private String url = "http://172.16.8.253:8080/LucasWeb2/querysss.do";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
