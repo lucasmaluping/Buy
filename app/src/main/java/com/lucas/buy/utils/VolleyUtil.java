@@ -88,7 +88,14 @@ public class VolleyUtil {
         MyApplication.getRequestQueue().add(stringRequest);
     }
 
-
+    /**
+     * 注册新用户的方法
+     * @param name 用户名
+     * @param password
+     * @param age
+     * @param gender
+     * @param callBack 回调接口，作用发送数据到MainActivity
+     */
     public void regist(final String name, final String password, final String age, final String gender, final RegistCallBack callBack) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UserContents.registUrl, new Response.Listener<String>() {
             @Override

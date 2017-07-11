@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void errr(String error) {
-                        Toast.makeText(MainActivity.this, "无此用户", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "账户或密码错误", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -85,6 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void error(VolleyError error) {
-
+        Log.i(TAG,"...error:"+ error);
     }
 }
