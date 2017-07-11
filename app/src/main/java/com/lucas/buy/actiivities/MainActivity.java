@@ -85,6 +85,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void error(VolleyError error) {
-        Log.i(TAG,"...error:"+ error);
+//        Log.i(TAG,"...error:"+ error);
     }
 }
