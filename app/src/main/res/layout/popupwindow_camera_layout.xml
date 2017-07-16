@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/pop_fromcamera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fromCamera" />
+
+        <Button
+            android:id="@+id/pop_fromlocal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fromLocal" />
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/pop_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+    </LinearLayout>
+</RelativeLayout>

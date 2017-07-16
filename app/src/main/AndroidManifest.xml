@@ -3,6 +3,7 @@
     package="com.lucas.buy" >
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:name=".actiivities.MyApplication"
         android:allowBackup="true"
