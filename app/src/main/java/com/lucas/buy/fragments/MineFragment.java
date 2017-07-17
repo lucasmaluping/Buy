@@ -1,15 +1,19 @@
 package com.lucas.buy.fragments;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.PopupWindowCompat;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,11 +24,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.lucas.buy.R;
 import com.lucas.buy.actiivities.MyApplication;
 import com.lucas.buy.contents.UserContents;
+import com.lucas.buy.utils.FileUtils;
 import com.lucas.buy.utils.ImageUpdateUtil;
 import com.lucas.buy.utils.VolleyImageUtils;
 
@@ -123,17 +129,54 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     }
 
     private void takeCamera(int resultCameraImage) {
-        Intent takePicturIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePicturIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//        Intent takePicturIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //确定第三方是否可以被打开
+//        if (takePicturIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            File photoFile = null;
+//            photoFile = createImageFile();
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                takePicturIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+//                        Uri.fromFile(photoFile));
+//            }
+//        }
+//        startActivityForResult(takePicturIntent, resultCameraImage);//跳转界面传回拍照所得数据
+
+        if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             File photoFile = null;
             photoFile = createImageFile();
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                takePicturIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-            }
+//            FileUtils.startActionCapture(getActivity(), photoFile, resultCameraImage);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Uri uri = getUriForFile(this.getActivity(), photoFile);
+            Log.i(TAG,"....uri:" + uri.toString());
+
+//            ContentValues values = new ContentValues();
+//            values.put(MediaStore.Images.Media.TITLE, photoFile.getName());
+//            uri = getActivity().getContentResolver().insert(
+//                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//            Log.i(TAG,"....uri:" + uri.toString());
+
+
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, getUriForFile(this.getActivity(), photoFile));
+            startActivityForResult(intent, resultCameraImage);
+        } else {
+            Toast.makeText(getActivity(),"....",Toast.LENGTH_SHORT).show();
         }
-        startActivityForResult(takePicturIntent, resultCameraImage);//跳转界面传回拍照所得数据
+
+    }
+
+    private Uri getUriForFile(Context context, File photoFile) {
+        if(context == null || photoFile == null) {
+            throw new NullPointerException();
+        }
+        Uri uri;
+        if(Build.VERSION.SDK_INT >= 24) {
+            uri = FileProvider.getUriForFile(context.getApplicationContext(),"com.lucas.buy.myProvider", photoFile);
+        } else {
+            uri = Uri.fromFile(photoFile);
+        }
+        return uri;
     }
 
     private File createImageFile() {
@@ -150,6 +193,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
 
         mCurrentPhotoPath = image.getAbsolutePath();
+        Log.i(TAG,"....mCurrentPhotoPath" + mCurrentPhotoPath);
         return image;
     }
 
@@ -173,6 +217,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG,"....onActivityResult" + "...requestCode:" + requestCode + "...resultCode:" + resultCode + "...data:" + data);
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_LOCAL_IMAGE && null != data) {
                 Uri selectedImage = data.getData();
@@ -187,17 +232,50 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("id", "111");
-//                ImageUpdateUtil.getInstance().uploadFile(picturePath, "lucas", UserContents.imageGetUrl, map);
+                ImageUpdateUtil.getInstance().uploadFile(picturePath, "lucas", UserContents.imageGetUrl, map);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ImageUpdateUtil.upload(picturePath);
-                        Log.i(TAG, "...picturePath" + picturePath);
-                    }
-                }).start();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ImageUpdateUtil.upload(picturePath);
+//                        Log.i(TAG, "...picturePath" + picturePath);
+//                    }
+//                }).start();
                 cursor.close();
-            } else if (requestCode == RESULT_CAMERA_IMAGE) {
+            } else if (requestCode == RESULT_CAMERA_IMAGE ) {
+//                Bundle extras = data.getExtras();
+//                Bitmap b = (Bitmap) extras.get("data");
+//                img.setImageBitmap(b);
+//                String name = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+//                String fileNmae = Environment.getExternalStorageDirectory().toString()+File.separator+"dong/image/"+name+".jpg";
+//                String srcPath = fileNmae;
+//                Log.i(TAG,"....srcPath:" + srcPath);
+//                File myCaptureFile =new File(fileNmae);
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", "111");
+                ImageUpdateUtil.getInstance().uploadFile(mCurrentPhotoPath, "lucas", UserContents.imageGetUrl, map);
+
+//                try {
+//                    if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+//                        if(!myCaptureFile.getParentFile().exists()){
+//                            myCaptureFile.getParentFile().mkdirs();
+//                        }
+////                        BufferedOutputStream bos;
+////                        bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+//                        b.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+//                        bos.flush();
+//                        bos.close();
+//                    }else{
+//
+//                        Toast toast= Toast.makeText(PhotoActivity.this, "保存失败，SD卡无效", Toast.LENGTH_SHORT);
+//                        toast.setGravity(Gravity.CENTER, 0, 0);
+//                        toast.show();
+//                    }
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
 //                SimpleTarget target = new SimpleTarget<Bitmap>() {
 //

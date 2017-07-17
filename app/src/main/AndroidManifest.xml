@@ -21,6 +21,18 @@
         </activity>
         <activity android:name=".actiivities.HomeActivty"></activity>
         <activity android:name=".actiivities.RegistActivity"></activity>
+        
+        <provider
+            android:authorities="com.lucas.buy.myProvider"
+            android:name="android.support.v4.content.FileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"
+                />
+        </provider>
     </application>
 
 </manifest>
