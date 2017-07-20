@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.lucas.buy.R;
-import com.lucas.buy.actiivities.MyApplication;
+import com.lucas.buy.activities.MyApplication;
 
 /**
  * Created by 111 on 2017/7/12.

@@ -1,11 +1,8 @@
 package com.lucas.buy.fragments;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v4.widget.PopupWindowCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,11 +22,8 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.lucas.buy.R;
-import com.lucas.buy.actiivities.MyApplication;
 import com.lucas.buy.contents.UserContents;
-import com.lucas.buy.utils.FileUtils;
 import com.lucas.buy.utils.ImageUpdateUtil;
 import com.lucas.buy.utils.VolleyImageUtils;
 
@@ -75,6 +68,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         ((ViewGroup) view.getParent()).removeView(view);
     }
 
+    /**
+     * 显示popWindow
+     *
+     */
     private void showPopWindow() {
         Log.i(TAG, "...showPop:");
         View popView = View.inflate(this.getActivity(), R.layout.popupwindow_camera_layout, null);
@@ -128,6 +125,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    /**
+     * 打开相机拍照
+     * @param resultCameraImage
+     */
     private void takeCamera(int resultCameraImage) {
 //        Intent takePicturIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //确定第三方是否可以被打开
@@ -145,20 +146,22 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             File photoFile = null;
             photoFile = createImageFile();
-//            FileUtils.startActionCapture(getActivity(), photoFile, resultCameraImage);
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Uri uri = getUriForFile(this.getActivity(), photoFile);
-            Log.i(TAG,"....uri:" + uri.toString());
 
+//            Uri uri = getUriForFile(this.getActivity(), photoFile);
+//            Log.i(TAG,"....uri:" + uri.toString());
+
+            //这部分代码感觉就是鸡肋
 //            ContentValues values = new ContentValues();
 //            values.put(MediaStore.Images.Media.TITLE, photoFile.getName());
 //            uri = getActivity().getContentResolver().insert(
 //                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 //            Log.i(TAG,"....uri:" + uri.toString());
-
-
 //            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, getUriForFile(this.getActivity(), photoFile));
+
+            //测试发现，不加传递内容，onActivityResult中data才不为空，但是传递过去一个缩略图，要想获取原图，需要从保存图片的路径中拿
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, getUriForFile(this.getActivity(), photoFile));
+            intent.putExtra("imagePath", photoFile.getAbsoluteFile());
             startActivityForResult(intent, resultCameraImage);
         } else {
             Toast.makeText(getActivity(),"....",Toast.LENGTH_SHORT).show();
@@ -166,6 +169,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    /**
+     * 鸡肋啊，根本用不着
+     * @param context
+     * @param photoFile
+     * @return
+     */
     private Uri getUriForFile(Context context, File photoFile) {
         if(context == null || photoFile == null) {
             throw new NullPointerException();
@@ -191,7 +200,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         mCurrentPhotoPath = image.getAbsolutePath();
         Log.i(TAG,"....mCurrentPhotoPath" + mCurrentPhotoPath);
         return image;
@@ -214,6 +222,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    /**
+     * 在onActivityResult方法中获取图片数据
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -228,11 +242,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 cursor.moveToFirst();
 
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                final String picturePath = cursor.getString(columnIndex);
+                final String picturePath = cursor.getString(columnIndex);//拿出了图片的路径
+                Log.i(TAG,"...picturePath:" + picturePath);
 
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("id", "111");
-                ImageUpdateUtil.getInstance().uploadFile(picturePath, "lucas", UserContents.imageGetUrl, map);
+                map.put("name", "lucas");
+                ImageUpdateUtil.getInstance().uploadFile(picturePath, "file", UserContents.imageGetUrl, map);
 
 //                new Thread(new Runnable() {
 //                    @Override
@@ -243,6 +258,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 //                }).start();
                 cursor.close();
             } else if (requestCode == RESULT_CAMERA_IMAGE ) {
+                //你妹！data根本什么东东都没有好不好
+//                String path = data.getStringExtra("imagePath");
+//                Log.i(TAG,"...path:" + path);
+
 //                Bundle extras = data.getExtras();
 //                Bitmap b = (Bitmap) extras.get("data");
 //                img.setImageBitmap(b);
@@ -251,9 +270,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 //                String srcPath = fileNmae;
 //                Log.i(TAG,"....srcPath:" + srcPath);
 //                File myCaptureFile =new File(fileNmae);
+
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("id", "111");
-                ImageUpdateUtil.getInstance().uploadFile(mCurrentPhotoPath, "lucas", UserContents.imageGetUrl, map);
+                map.put("name", "lucas");
+                ImageUpdateUtil.getInstance().uploadFile(mCurrentPhotoPath, "file", UserContents.imageGetUrl, map);
 
 //                try {
 //                    if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){

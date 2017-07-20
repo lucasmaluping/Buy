@@ -5,22 +5,22 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
-        android:name=".actiivities.MyApplication"
+        android:name=".activities.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".actiivities.MainActivity" >
+        <activity android:name=".activities.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".actiivities.HomeActivty"></activity>
-        <activity android:name=".actiivities.RegistActivity"></activity>
+        <activity android:name=".activities.HomeActivty"></activity>
+        <activity android:name=".activities.RegistActivity"></activity>
         
         <provider
             android:authorities="com.lucas.buy.myProvider"
@@ -33,6 +33,7 @@
                 android:resource="@xml/filepaths"
                 />
         </provider>
+        <service android:name=".services.AudioService"/>
     </application>
 
 </manifest>

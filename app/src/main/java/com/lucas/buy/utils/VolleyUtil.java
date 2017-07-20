@@ -1,6 +1,5 @@
 package com.lucas.buy.utils;
 
-import android.content.ContentUris;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -11,7 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.lucas.buy.interfaces.LoginCallBack;
 import com.lucas.buy.interfaces.MyCallBack;
-import com.lucas.buy.actiivities.MyApplication;
+import com.lucas.buy.activities.MyApplication;
 import com.lucas.buy.contents.UserContents;
 import com.lucas.buy.domain.Customer;
 import com.lucas.buy.interfaces.RegistCallBack;
@@ -117,6 +116,30 @@ public class VolleyUtil {
                 map.put("password", password);
                 map.put("age", age);
                 map.put("gender", gender);
+                return map;
+            }
+        };
+        stringRequest.setTag(VOLLEY_TAG);
+        MyApplication.getRequestQueue().add(stringRequest);
+    }
+
+
+    public void getUserInfo(final String name) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UserContents.getUserInfo, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i(TAG,"....onResponse:" + response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG,"...error" + error);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", name);
                 return map;
             }
         };

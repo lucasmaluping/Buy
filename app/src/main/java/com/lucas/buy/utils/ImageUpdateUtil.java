@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * 上传图片的类
  * Created by 111 on 2017/7/13.
  */
 
@@ -30,6 +31,11 @@ public class ImageUpdateUtil {
 
     private static String boundary = "-----------------------------1954231646874";
 
+    /**
+     * 到目前为止，仍未发现和下面的uploadFile有什么本质区别，但是就是不执行，服务器端解析的size就他妈的是0
+     * @param filePath
+     * @return
+     */
     public static String upload(String filePath) {
         Log.i(TAG,"...upload");
         try {
@@ -115,10 +121,11 @@ public class ImageUpdateUtil {
     private static final String PREFIX = "--";
     private static final String LINE_END = "\r\n";
     private static final String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+    private static final String TAG = "UploadUtil";
+
     private ImageUpdateUtil() {
 
     }
-
     /**
      * 单例模式获取上传工具类
      * @return
@@ -130,7 +137,6 @@ public class ImageUpdateUtil {
         return uploadUtil;
     }
 
-    private static final String TAG = "UploadUtil";
     private int readTimeOut = 10 * 1000; // 读取超时
     private int connectTimeout = 10 * 1000; // 超时时间
     /***
@@ -190,6 +196,8 @@ public class ImageUpdateUtil {
      *            在网页上<input type=file name=xxx/> xxx就是这里的fileKey
      * @param RequestURL
      *            请求的URL
+     * @param param
+     *         post方式上传的参数
      */
     public void uploadFile(final File file, final String fileKey,
                            final String RequestURL, final Map<String, String> param) {

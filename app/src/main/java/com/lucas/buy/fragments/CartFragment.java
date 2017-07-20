@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.lucas.buy.R;
 
@@ -18,6 +19,7 @@ public class CartFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+//        getActivity().requestWindowFeature(Window.FEATURE_PROGRESS);
         view = inflater.inflate(R.layout.cart_layout,container, false);
         return view;
     }
