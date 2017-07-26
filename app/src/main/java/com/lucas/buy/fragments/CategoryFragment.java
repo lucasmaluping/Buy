@@ -71,16 +71,9 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
 
         Intent intent = new Intent();
         intent.setClass(this.getActivity(), AudioService.class);
-        getActivity().startService(intent);
-        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+//        getActivity().startService(intent);
+//        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);
 
-//        view.findViewById(R.id.top_layout_right_ImageView).                                                  //切换至我的音乐Fragment
-//                setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mListener.onMyMusicFragmentInteraction(AppConstant.PlayerMsg.BACK_TO_MAIN_FRAGMENT);
-//            }
-//        });
 
         finder.setListAdpter(MyActivity.getApplicationContext(),
                 mp3Infos, (ListView) view.findViewById(R.id.music_list));

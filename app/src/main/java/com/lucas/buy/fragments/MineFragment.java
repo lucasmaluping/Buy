@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.lucas.buy.R;
@@ -40,7 +43,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by 111 on 2017/7/7.
  */
 
-public class MineFragment extends Fragment implements View.OnClickListener {
+public class MineFragment extends Fragment implements View.OnClickListener, ImageUpdateUtil.OnUploadProcessListener {
     private static final String TAG = "MineFragment";
     private static final int RESULT_LOCAL_IMAGE = 0;
     private static final int RESULT_CAMERA_IMAGE = 1;
@@ -48,11 +51,36 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private ImageView img;
     private String mCurrentPhotoPath;
 
+    private ProgressBar progressBar;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    Log.i(TAG,"....max:" + msg.obj);
+                    progressBar.setMax((int)msg.obj);
+                    break;
+                case 1:
+                    Log.i(TAG,"....progress:" + msg.obj);
+                    progressBar.setProgress((int)msg.obj);
+                    break;
+                case 2:
+                    Log.i(TAG,"....ok:" + msg.obj);
+//                    progressBar.setProgress(Integer.valueOf(msg.obj.toString()));
+                    progressBar.setProgress((int) msg.obj);
+                    Toast.makeText(getActivity(),"文件上传成功！",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.mine_layout, container, false);
         initView(view);
+
         return view;
     }
 
@@ -60,6 +88,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         img = (ImageView) view.findViewById(R.id.mine_img);
         VolleyImageUtils.loadImage(UserContents.imageUrl, img);
         img.setOnClickListener(this);
+
+        progressBar = (ProgressBar) view.findViewById(R.id.mine_progress_bar);
     }
 
     @Override
@@ -247,7 +277,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("name", "lucas");
-                ImageUpdateUtil.getInstance().uploadFile(picturePath, "file", UserContents.imageGetUrl, map);
+                ImageUpdateUtil.getInstance().setOnUploadProcessListener(this);
+                ImageUpdateUtil.getInstance().uploadFile(picturePath, "file", UserContents.imageGetUrl, map, handler);
+
 
 //                new Thread(new Runnable() {
 //                    @Override
@@ -273,7 +305,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("name", "lucas");
-                ImageUpdateUtil.getInstance().uploadFile(mCurrentPhotoPath, "file", UserContents.imageGetUrl, map);
+                ImageUpdateUtil.getInstance().setOnUploadProcessListener(this);
+                ImageUpdateUtil.getInstance().uploadFile(mCurrentPhotoPath, "file", UserContents.imageGetUrl, map, handler);
 
 //                try {
 //                    if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
@@ -328,5 +361,20 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             }
         }
 
+    }
+
+    @Override
+    public void onUploadDone(int responseCode, String message) {
+        Log.i(TAG,"...responseCode:" + responseCode + "..message:" + message);
+    }
+
+    @Override
+    public void onUploadProcess(int uploadSize) {
+        Log.i(TAG, "....uploadSize:" + uploadSize);
+    }
+
+    @Override
+    public void initUpload(int fileSize) {
+        Log.i(TAG,"..fileSize:" + fileSize);
     }
 }

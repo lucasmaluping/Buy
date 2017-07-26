@@ -1,5 +1,7 @@
 package com.lucas.buy.utils;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.lucas.buy.contents.UserContents;
@@ -14,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -172,14 +175,14 @@ public class ImageUpdateUtil {
      *            请求的URL
      */
     public void uploadFile(String filePath, String fileKey, String RequestURL,
-                           Map<String, String> param) {
+                           Map<String, String> param, Handler handler) {
         if (filePath == null) {
             sendMessage(UPLOAD_FILE_NOT_EXISTS_CODE,"文件不存在");
             return;
         }
         try {
             File file = new File(filePath);
-            uploadFile(file, fileKey, RequestURL, param);
+            uploadFile(file, fileKey, RequestURL, param, handler);
         } catch (Exception e) {
             sendMessage(UPLOAD_FILE_NOT_EXISTS_CODE,"文件不存在");
             e.printStackTrace();
@@ -200,7 +203,7 @@ public class ImageUpdateUtil {
      *         post方式上传的参数
      */
     public void uploadFile(final File file, final String fileKey,
-                           final String RequestURL, final Map<String, String> param) {
+                           final String RequestURL, final Map<String, String> param, final Handler handler) {
         if (file == null || (!file.exists())) {
             sendMessage(UPLOAD_FILE_NOT_EXISTS_CODE,"文件不存在");
             return;
@@ -212,14 +215,14 @@ public class ImageUpdateUtil {
         new Thread(new Runnable() {  //开启线程上传文件
             @Override
             public void run() {
-                toUploadFile(file, fileKey, RequestURL, param);
+                toUploadFile(file, fileKey, RequestURL, param, handler);
             }
         }).start();
 
     }
 
     private void toUploadFile(File file, String fileKey, String RequestURL,
-                              Map<String, String> param) {
+                              Map<String, String> param, Handler handler) {
         String result = null;
         requestTime= 0;
 
@@ -289,10 +292,13 @@ public class ImageUpdateUtil {
 
             /**上传文件*/
             InputStream is = new FileInputStream(file);
-////            onUploadProcessListener.initUpload((int)file.length());
+
+
+
+            onUploadProcessListener.initUpload((int)file.length());
 //            byte[] bytes = new byte[1024];
-//            int len = 0;
-//            int curLen = 0;
+            int len = 0;
+            int curLen = 0;
 //            while ((len = is.read(bytes)) != -1) {
 //                curLen += len;
 //                dos.write(bytes, 0, len);
@@ -304,16 +310,41 @@ public class ImageUpdateUtil {
 //            dos.write(end_data);
 
 
+
             int bytesAvailable = is.available();
             int maxBufferSize = 1 * 1024 * 512;
             int bufferSize = Math.min(bytesAvailable, maxBufferSize);
             byte[] buffer = new byte[bufferSize];
             int bytesRead = is.read(buffer, 0, bufferSize);
+
+            int ave = bytesAvailable/bufferSize;
+
+            Message messag = new Message();
+            messag.what = 0;
+
+//            Log.i(TAG,"...file.length():" + file.length());
+//            messag.obj = bytesAvailable;
+
+            Log.i(TAG, "...ave:" + ave);
+            messag.obj = ave;
+            handler.sendMessage(messag);
+
+            int max = 0;
+
             while (bytesRead > 0) {
+                Message msg = new Message();
+                msg.what = 1;
                 dos.write(buffer, 0, bytesRead);
+
+                curLen += len;
+                onUploadProcessListener.onUploadProcess(curLen);
+
                 bytesAvailable = is.available();
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
                 bytesRead = is.read(buffer, 0, bufferSize);
+                max += 1;
+                msg.obj = max;
+                handler.sendMessage(msg);
             }
             is.close();
             dos.writeBytes("\r\n");
@@ -337,18 +368,37 @@ public class ImageUpdateUtil {
              * 获取响应码 200=成功 当响应成功，获取响应的流
              */
             int res = conn.getResponseCode();
+            String msg = conn.getResponseMessage();
+            Log.i(TAG, "...msg:" + msg);
+
+
             responseTime = System.currentTimeMillis();
             this.requestTime = (int) ((responseTime-requestTime)/1000);
             Log.e(TAG, "response code:" + res);
             if (res == 200) {
                 Log.e(TAG, "request success");
                 InputStream input = conn.getInputStream();
-                StringBuffer sb1 = new StringBuffer();
-                int ss;
-                while ((ss = input.read()) != -1) {
-                    sb1.append((char) ss);
+//                StringBuffer sb1 = new StringBuffer();
+//                int ss;
+//                while ((ss = input.read()) != -1) {
+//                    sb1.append((char) ss);
+//                }
+//                result = sb1.toString();
+
+                int length = 0;
+                byte[] data = new byte[1024];
+                ByteArrayOutputStream bao = new ByteArrayOutputStream();
+                while ((length = input.read(data)) != -1) {
+                    bao.write(data, 0, length);
                 }
-                result = sb1.toString();
+                input.close();
+                result = new String(bao.toByteArray());
+                if(result.equals("文件上传成功！")) {
+                    Message m = new Message();
+                    m.what = 2;
+                    m.obj = ave;
+                    handler.sendMessage(m);
+                }
                 Log.e(TAG, "result : " + result);
                 sendMessage(UPLOAD_SUCCESS_CODE, "上传结果："
                         + result);
@@ -376,7 +426,7 @@ public class ImageUpdateUtil {
      */
     private void sendMessage(int responseCode,String responseMessage)
     {
-//        onUploadProcessListener.onUploadDone(responseCode, responseMessage);
+        onUploadProcessListener.onUploadDone(responseCode, responseMessage);
     }
 
     /**
@@ -407,8 +457,7 @@ public class ImageUpdateUtil {
 
 
 
-    public void setOnUploadProcessListener(
-            OnUploadProcessListener onUploadProcessListener) {
+    public void setOnUploadProcessListener( OnUploadProcessListener onUploadProcessListener) {
         this.onUploadProcessListener = onUploadProcessListener;
     }
 
