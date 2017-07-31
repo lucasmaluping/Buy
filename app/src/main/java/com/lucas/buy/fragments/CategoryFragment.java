@@ -12,9 +12,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.MapView;
 import com.lucas.buy.R;
+import com.lucas.buy.activities.AnimActivity;
+import com.lucas.buy.activities.OtherActivity;
 import com.lucas.buy.adapters.MusicListAdapter;
 import com.lucas.buy.domain.Mp3Info;
 import com.lucas.buy.services.AudioService;
@@ -69,17 +74,45 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
         finder = new FindSongs();
         view = inflater.inflate(R.layout.category_layout, container, false);
 
+        initView(view, savedInstanceState);
+
         Intent intent = new Intent();
         intent.setClass(this.getActivity(), AudioService.class);
-//        getActivity().startService(intent);
-//        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        getActivity().startService(intent);
+        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);
 
 
-        finder.setListAdpter(MyActivity.getApplicationContext(),
-                mp3Infos, (ListView) view.findViewById(R.id.music_list));
+//        finder.setListAdpter(MyActivity.getApplicationContext(),
+//                mp3Infos, (ListView) view.findViewById(R.id.music_list));
 
 
         return view;
+    }
+
+    private void initView(View view, Bundle savedInstanceState) {
+        Button btn = (Button) view.findViewById(R.id.btn_go);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), OtherActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.btn_anim).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AnimActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.stop_play).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                audioService.stop();
+            }
+        });
     }
 
     @Override

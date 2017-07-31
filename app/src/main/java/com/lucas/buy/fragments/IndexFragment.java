@@ -52,6 +52,7 @@ public class IndexFragment extends Fragment implements View.OnClickListener{
         btnpause.setOnClickListener(this);
 
 //        mediaPlayer=new MediaPlayer();
+//        mediaPlayer.set
         mediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.shipin);
         surfaceView=(SurfaceView) this.view.findViewById(R.id.surfaceView);
 

@@ -47,6 +47,12 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
         return START_STICKY;
     }
 
+    public void stop() {
+        if(player.isPlaying()) {
+            player.stop();
+        }
+    }
+
     public void onDestroy(){
         //super.onDestroy();
         if(player.isPlaying()){
