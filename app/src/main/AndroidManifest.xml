@@ -17,6 +17,24 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!--允许程序改变网络连接状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!--读取联系人权限，上传联系人需要用到此权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <!--外存储读权限，构建语法需要用到此权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!--配置权限，用来记录应用配置信息 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!--手机定位信息，用来为语义等功能提供定位，提供更精准的服务-->
+    <!--定位信息是敏感信息，可通过Setting.setLocationEnable(false)关闭定位请求 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!--如需使用人脸识别，还要添加：摄相头权限，拍照需要用到 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
     <application
         android:name=".activities.MyApplication"
         android:allowBackup="true"
@@ -32,12 +50,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!--<activity android:name=".activities.HomeActivty"></activity>-->
         <activity android:name=".activities.RegistActivity"></activity>
 
         <activity android:name=".activities.OtherActivity"/>
         <activity android:name=".activities.AnimActivity"/>
-        
+        <activity android:name=".activities.RecyclerActivity"/>
+        <activity android:name=".activities.SelfActivity"/>
+        <activity android:name=".activities.MyActivity"/>
+        <activity android:name=".activities.SelfRecyclerActiviy"/>
+        <activity android:name=".activities.EditLineActivity"/>
+        <activity android:name=".activities.BroadCaseTestActivity"/>
+        <activity android:name=".activities.VoiceActivity"/>
+
         <provider
             android:authorities="com.lucas.buy.myProvider"
             android:name="android.support.v4.content.FileProvider"
@@ -50,6 +76,12 @@
                 />
         </provider>
         <service android:name=".services.AudioService"/>
+
+        <receiver android:name=".receivers.Receiver">
+            <intent-filter>
+                <action android:name="com.lucas"></action>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

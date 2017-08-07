@@ -7,6 +7,8 @@ import android.util.LruCache;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 
 /**
  * Created by 111 on 2017/7/8.
@@ -24,10 +26,19 @@ public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
         imageLoader = new ImageLoader(getRequestQueue(), new VolleyImageCache());
 
+        // 将“12345678”替换成您申请的APPID，申请地址：http://www.xfyun.cn
+// 请勿在“=”与appid之间添加任何空字符或者转义符
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59841c04");
+
+
+
+
+        // 以下语句用于设置日志开关（默认开启），设置成false时关闭语音云SDK日志打印
+        // Setting.setShowLog(false);
+        super.onCreate();
 
     }
 

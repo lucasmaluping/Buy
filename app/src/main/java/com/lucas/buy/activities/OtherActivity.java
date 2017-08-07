@@ -37,6 +37,7 @@ public class OtherActivity extends Activity {
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
 //        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
 //        myLocationStyle.myLocationIcon(bitmap);
+//        BitmapDescriptor bitmapDescriptor = new BitmapDescriptor();
 
         myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         myLocationStyle.strokeColor(R.color.red);

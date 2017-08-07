@@ -9,21 +9,29 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.TextView;
 
-import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.MapView;
 import com.lucas.buy.R;
 import com.lucas.buy.activities.AnimActivity;
+import com.lucas.buy.activities.BroadCaseTestActivity;
+import com.lucas.buy.activities.EditLineActivity;
 import com.lucas.buy.activities.OtherActivity;
+import com.lucas.buy.activities.RecyclerActivity;
+import com.lucas.buy.activities.SelfActivity;
+import com.lucas.buy.activities.SelfRecyclerActiviy;
+import com.lucas.buy.activities.VoiceActivity;
 import com.lucas.buy.adapters.MusicListAdapter;
 import com.lucas.buy.domain.Mp3Info;
+import com.lucas.buy.interfaces.TestCallBack;
 import com.lucas.buy.services.AudioService;
 import com.lucas.buy.utils.FindSongs;
+import com.lucas.buy.utils.VolleyUtil;
 
 import java.util.List;
 
@@ -32,6 +40,7 @@ import java.util.List;
  */
 
 public class CategoryFragment extends Fragment implements View.OnClickListener{
+    private static final String TAG = "CategoryFragment";
     private View view;
 
     private FindSongs finder;                                              //查找歌曲的类的实例
@@ -113,6 +122,87 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
                 audioService.stop();
             }
         });
+
+        view.findViewById(R.id.to_recycler).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RecyclerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button b = (Button)view.findViewById(R.id.to_self);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SelfActivity.class);
+                startActivity(intent);
+            }
+        });
+        b.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.i(TAG,".....action:" + motionEvent.getAction() + "...." + motionEvent.toString());
+//                return true;//返回true，说明事件已经被onTouch消费掉了
+                return false;
+            }
+        });
+
+        final TextView tv = (TextView)view.findViewById(R.id.show_info);
+
+        TestCallBack testCallBack = new TestCallBack() {
+            @Override
+            public void success(String info) {
+                tv.setText(info);
+            }
+
+            @Override
+            public void error() {
+
+            }
+        };
+        VolleyUtil.getInstance().setTestListener(testCallBack);
+        VolleyUtil.getInstance().getUserInfo("lucas");
+
+        view.findViewById(R.id.to_my).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), com.lucas.buy.activities.MyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.to_self_recycler).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SelfRecyclerActiviy.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.to_edit_line).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EditLineActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.to_broadcast).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), BroadCaseTestActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.to_voice).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), VoiceActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -147,4 +237,6 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
 
         public void onMyMusicFragmentInteraction(int msg, int position);      //这个方法要在MainActivity中再次重写一遍</span><span style="color:#222222;">
     }
+
+
 }

@@ -14,6 +14,7 @@ import com.lucas.buy.activities.MyApplication;
 import com.lucas.buy.contents.UserContents;
 import com.lucas.buy.domain.Customer;
 import com.lucas.buy.interfaces.RegistCallBack;
+import com.lucas.buy.interfaces.TestCallBack;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,8 @@ public class VolleyUtil {
     private static final String VOLLEY_TAG = "VolleyTag";
 
     private static VolleyUtil instance;
+
+    private TestCallBack callBack;
 
     public static VolleyUtil getInstance() {
         if(instance == null) {
@@ -129,6 +132,7 @@ public class VolleyUtil {
             @Override
             public void onResponse(String response) {
                 Log.i(TAG,"....onResponse:" + response.toString());
+//                callBack.success(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -146,4 +150,10 @@ public class VolleyUtil {
         stringRequest.setTag(VOLLEY_TAG);
         MyApplication.getRequestQueue().add(stringRequest);
     }
+
+    public void setTestListener(TestCallBack callBack) {
+        this.callBack = callBack;
+    }
+
+
 }

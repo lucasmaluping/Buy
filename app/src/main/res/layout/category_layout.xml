@@ -19,6 +19,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/to_recycler"
+        android:text="RecyclerActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/to_self"
+        android:text="SelfActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/show_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/to_my"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试页面"
+        />
+    <Button
+        android:id="@+id/to_self_recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RecyclerActivity"
+        />
+
+
+    <Button
+        android:id="@+id/to_edit_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="to_line"
+        />
+
+    <Button
+        android:id="@+id/to_broadcast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BroadCast"
+        />
+
+    <Button
+        android:id="@+id/to_voice"
+        android:text="语音听写"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 
 </LinearLayout>
