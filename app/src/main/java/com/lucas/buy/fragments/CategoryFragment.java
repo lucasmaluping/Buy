@@ -26,6 +26,7 @@ import com.lucas.buy.activities.RecyclerActivity;
 import com.lucas.buy.activities.SelfActivity;
 import com.lucas.buy.activities.SelfRecyclerActiviy;
 import com.lucas.buy.activities.VoiceActivity;
+import com.lucas.buy.activities.WakeUpActivity;
 import com.lucas.buy.adapters.MusicListAdapter;
 import com.lucas.buy.domain.Mp3Info;
 import com.lucas.buy.interfaces.TestCallBack;
@@ -34,6 +35,9 @@ import com.lucas.buy.utils.FindSongs;
 import com.lucas.buy.utils.VolleyUtil;
 
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by 111 on 2017/7/7.
@@ -71,6 +75,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         MyActivity = getActivity();
         finder = new FindSongs();
         mp3Infos = finder.getMp3Infos(MyActivity.getContentResolver());
@@ -82,6 +87,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         finder = new FindSongs();
         view = inflater.inflate(R.layout.category_layout, container, false);
+        ButterKnife.bind(this, view);
 
         initView(view, savedInstanceState);
 
@@ -203,17 +209,28 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
                 startActivity(intent);
             }
         });
+
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ((ViewGroup) view.getParent()).removeView(view);
+
     }
 
-    @Override
+
+    @Override @OnClick(R.id.to_voice_wakeup)
     public void onClick(View v) {
         int id = v.getId();
+
+        Intent intent = new Intent(getActivity(), WakeUpActivity.class);
+        startActivity(intent);
+
+
+
+
 //        Intent intent = new Intent();
 //        intent.setClass(this.getActivity(), AudioService.class);
 //        if(id == R.id.btn_start){

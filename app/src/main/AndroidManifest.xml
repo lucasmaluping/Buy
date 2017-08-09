@@ -34,6 +34,9 @@
     <!--如需使用人脸识别，还要添加：摄相头权限，拍照需要用到 -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!--点亮屏幕 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
 
     <application
         android:name=".activities.MyApplication"
@@ -63,6 +66,7 @@
         <activity android:name=".activities.EditLineActivity"/>
         <activity android:name=".activities.BroadCaseTestActivity"/>
         <activity android:name=".activities.VoiceActivity"/>
+        <activity android:name=".activities.WakeUpActivity" />
 
         <provider
             android:authorities="com.lucas.buy.myProvider"

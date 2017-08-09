@@ -19,7 +19,7 @@ import butterknife.OnClick;
  * Created by 111 on 2017/8/2.
  */
 
-public class MyActivity extends Activity {
+public class MyActivity extends Activity implements View.OnClickListener{
     @BindView(R.id.edit_message) EditText username;
 
     @Override
@@ -31,9 +31,14 @@ public class MyActivity extends Activity {
         View v = new View(this);
     }
 
-    @OnClick(R.id.my_btn) void click() {
+
+//    public void click() {
+//
+//    }
+
+
+    @Override @OnClick(R.id.my_btn)
+    public void onClick(View view) {
         username.setText("hello world!");
     }
-
-
 }
