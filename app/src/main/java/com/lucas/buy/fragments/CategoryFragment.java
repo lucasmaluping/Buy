@@ -21,6 +21,7 @@ import com.lucas.buy.R;
 import com.lucas.buy.activities.AnimActivity;
 import com.lucas.buy.activities.BroadCaseTestActivity;
 import com.lucas.buy.activities.EditLineActivity;
+import com.lucas.buy.activities.NotificationActivity;
 import com.lucas.buy.activities.OtherActivity;
 import com.lucas.buy.activities.RecyclerActivity;
 import com.lucas.buy.activities.SelfActivity;
@@ -221,12 +222,19 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     }
 
 
-    @Override @OnClick(R.id.to_voice_wakeup)
+    @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification})
     public void onClick(View v) {
         int id = v.getId();
-
-        Intent intent = new Intent(getActivity(), WakeUpActivity.class);
-        startActivity(intent);
+        Log.i(TAG,".....id:" + id);
+        switch (id) {
+            case R.id.to_notification:
+                Intent intent = new Intent(getActivity(), NotificationActivity.class);;
+                startActivity(intent);
+                break;
+            case R.id.to_voice_wakeup:
+                startActivity(new Intent(getActivity(), WakeUpActivity.class));
+                break;
+        }
 
 
 

@@ -36,6 +36,8 @@
 
     <!--点亮屏幕 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--解锁-->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"></uses-permission>
 
 
     <application
@@ -67,6 +69,7 @@
         <activity android:name=".activities.BroadCaseTestActivity"/>
         <activity android:name=".activities.VoiceActivity"/>
         <activity android:name=".activities.WakeUpActivity" />
+        <activity android:name=".activities.NotificationActivity"/>
 
         <provider
             android:authorities="com.lucas.buy.myProvider"

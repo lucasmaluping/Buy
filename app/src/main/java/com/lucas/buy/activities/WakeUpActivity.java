@@ -1,5 +1,7 @@
 package com.lucas.buy.activities;
 
+import android.app.KeyguardManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -56,15 +58,29 @@ public class WakeUpActivity extends BaseActivity implements View.OnClickListener
     PowerManager pm;
     PowerManager.WakeLock mWakelock;
 
+    KeyguardManager keyguardManager;
+    KeyguardManager.KeyguardLock keyguardLock;
+
+
     private WakeuperListener mWakeuperListener = new WakeuperListener() {
 
         @Override
         public void onResult(WakeuperResult result) {
             pm = (PowerManager) getSystemService(POWER_SERVICE);
             mWakelock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "SimpleTimer");
+
+            keyguardManager = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+            keyguardLock = keyguardManager.newKeyguardLock("");
+
+
             Log.d(TAG, "onResult");
 
             mWakelock.acquire();
+
+            keyguardLock.disableKeyguard();
+
+            Intent intent = new Intent(WakeUpActivity.this, WakeUpActivity.class);
+            startActivity(intent);
 
             if (!"1".equalsIgnoreCase(keep_alive)) {
 //                setRadioEnable(true);
