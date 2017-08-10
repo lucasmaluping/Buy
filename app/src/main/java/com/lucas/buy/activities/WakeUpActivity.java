@@ -1,6 +1,10 @@
 package com.lucas.buy.activities;
 
 import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +24,7 @@ import com.iflytek.cloud.WakeuperListener;
 import com.iflytek.cloud.WakeuperResult;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.lucas.buy.R;
+import com.lucas.buy.utils.NotificationsUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,6 +112,29 @@ public class WakeUpActivity extends BaseActivity implements View.OnClickListener
                 e.printStackTrace();
             }
             textView.setText(resultString);
+            boolean flag = NotificationsUtils.isNotificationEnabled(WakeUpActivity.this);
+            Toast.makeText(WakeUpActivity.this,"....flag" + flag,Toast.LENGTH_SHORT).show();
+            if(!flag) {
+                NotificationsUtils.requestPermission(0, WakeUpActivity.this);
+            }
+
+
+            //通知管理器
+            NotificationManager notificationManager = (NotificationManager)getSystemService(Service.NOTIFICATION_SERVICE);
+
+            Notification.Builder builder1 = new Notification.Builder(WakeUpActivity.this);
+            builder1.setSmallIcon(R.mipmap.ic_launcher); //设置图标
+            builder1.setTicker("显示第二个通知");
+            builder1.setContentTitle("主人"); //设置标题
+            builder1.setContentText("叫我干嘛。。。。"); //消息内容
+            builder1.setWhen(System.currentTimeMillis()); //发送时间
+            builder1.setDefaults(Notification.DEFAULT_ALL); //设置默认的提示音，振动方式，灯光
+            builder1.setAutoCancel(true);//打开程序后图标消失
+            Intent i =new Intent (WakeUpActivity.this,WakeUpActivity.class);
+            PendingIntent pendingIntent =PendingIntent.getActivity(WakeUpActivity.this, 0,i , 0);
+            builder1.setContentIntent(pendingIntent);
+            Notification notification1 = builder1.build();
+            notificationManager.notify(124, notification1); // 通过通知管理器发送通知
         }
 
         @Override

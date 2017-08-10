@@ -87,6 +87,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notification" />
+        <Button
+            android:id="@+id/to_hecheng"
+            android:text="合成"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

@@ -21,6 +21,7 @@ import com.lucas.buy.R;
 import com.lucas.buy.activities.AnimActivity;
 import com.lucas.buy.activities.BroadCaseTestActivity;
 import com.lucas.buy.activities.EditLineActivity;
+import com.lucas.buy.activities.HechengActivity;
 import com.lucas.buy.activities.NotificationActivity;
 import com.lucas.buy.activities.OtherActivity;
 import com.lucas.buy.activities.RecyclerActivity;
@@ -222,7 +223,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     }
 
 
-    @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification})
+    @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification, R.id.to_hecheng})
     public void onClick(View v) {
         int id = v.getId();
         Log.i(TAG,".....id:" + id);
@@ -233,6 +234,9 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.to_voice_wakeup:
                 startActivity(new Intent(getActivity(), WakeUpActivity.class));
+                break;
+            case R.id.to_hecheng:
+                startActivity(new Intent(getActivity(), HechengActivity.class));
                 break;
         }
 
