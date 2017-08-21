@@ -10,6 +10,40 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <SeekBar
+            android:id="@+id/play_seek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/stop_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="停止播放" />
+            <Button
+                android:id="@+id/pause_play"
+                android:text="暂停播放"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/start_play"
+                android:text="开始播放"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/destroy_service"
+                android:text="销毁服务"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+
         <Button
             android:id="@+id/btn_go"
             android:layout_width="wrap_content"
@@ -22,11 +56,7 @@
             android:layout_height="wrap_content"
             android:text="动画" />
 
-        <Button
-            android:id="@+id/stop_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="停止播放" />
+
 
         <Button
             android:id="@+id/to_recycler"
@@ -89,7 +119,14 @@
             android:text="Notification" />
         <Button
             android:id="@+id/to_hecheng"
-            android:text="合成"
+            android:text="合成
+"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/to_gps"
+            android:text="GPS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

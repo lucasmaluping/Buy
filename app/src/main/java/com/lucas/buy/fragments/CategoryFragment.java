@@ -6,21 +6,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.lucas.buy.R;
 import com.lucas.buy.activities.AnimActivity;
 import com.lucas.buy.activities.BroadCaseTestActivity;
 import com.lucas.buy.activities.EditLineActivity;
+import com.lucas.buy.activities.GPSActivity;
 import com.lucas.buy.activities.HechengActivity;
 import com.lucas.buy.activities.NotificationActivity;
 import com.lucas.buy.activities.OtherActivity;
@@ -38,6 +45,7 @@ import com.lucas.buy.utils.VolleyUtil;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -56,6 +64,28 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     private OnFragmentInteractionListener mListener;
 
     private AudioService audioService;
+
+    @BindView(R.id.play_seek)
+    SeekBar seekBar;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    seekBar.setProgress((Integer) msg.obj);
+                    break;
+                case 1:
+//                    Log.i(TAG,"....total:" + (int)msg.obj);
+                    seekBar.setMax((Integer) msg.obj);
+                    break;
+            }
+        }
+    };
+
+
+
 
     //使用ServiceConnection来监听Service状态的变化
     private ServiceConnection conn = new ServiceConnection() {
@@ -94,9 +124,12 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
         initView(view, savedInstanceState);
 
         Intent intent = new Intent();
+        Bundle b = new Bundle();
+//        b.putParcelabl;
+        intent.putExtra("handler", new Messenger(handler));
         intent.setClass(this.getActivity(), AudioService.class);
-        getActivity().startService(intent);
-        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        getActivity().startService(intent);//onCreat和onStartCommand方法都会执行
+        getActivity().bindService(intent, conn, Context.BIND_AUTO_CREATE);//只执行Service里的哦那Create方法，onStartCommand方法不会执行
 
 
 //        finder.setListAdpter(MyActivity.getApplicationContext(),
@@ -107,6 +140,35 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initView(View view, Bundle savedInstanceState) {
+        seekBar.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                return false;
+            }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Log.i(TAG,"....onProgressChanged()...." + progress + "....fromUser:" + fromUser);
+                if(fromUser){
+                    audioService.haveFun(progress);
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+
         Button btn = (Button) view.findViewById(R.id.btn_go);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,12 +186,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        view.findViewById(R.id.stop_play).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                audioService.stop();
-            }
-        });
+
 
         view.findViewById(R.id.to_recycler).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,11 +276,11 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
     public void onDestroyView() {
         super.onDestroyView();
         ((ViewGroup) view.getParent()).removeView(view);
-
     }
 
 
-    @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification, R.id.to_hecheng})
+    @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification, R.id.to_hecheng, R.id.to_gps,
+            R.id.stop_play, R.id.pause_play, R.id.start_play, R.id.destroy_service})
     public void onClick(View v) {
         int id = v.getId();
         Log.i(TAG,".....id:" + id);
@@ -238,6 +295,28 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
             case R.id.to_hecheng:
                 startActivity(new Intent(getActivity(), HechengActivity.class));
                 break;
+            case R.id.to_gps:
+                startActivity(new Intent(getActivity(), GPSActivity.class));
+                break;
+            case R.id.start_play:
+                audioService.start();
+                break;
+            case R.id.pause_play:
+                audioService.pause();
+                break;
+            case R.id.stop_play:
+                audioService.stop();
+                seekBar.setProgress(0);
+                break;
+            case R.id.destroy_service:
+//                audioService.onDestroy();
+//                audioService.stopSelf();
+
+                Intent i = new Intent();
+                i.setClass(this.getActivity(), AudioService.class);
+                getActivity().unbindService(conn);
+                break;
+
         }
 
 

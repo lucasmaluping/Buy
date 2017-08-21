@@ -71,6 +71,7 @@
         <activity android:name=".activities.WakeUpActivity" />
         <activity android:name=".activities.NotificationActivity"/>
         <activity android:name=".activities.HechengActivity"/>
+        <activity android:name=".activities.GPSActivity"/>
 
         <provider
             android:authorities="com.lucas.buy.myProvider"
@@ -90,6 +91,7 @@
                 <action android:name="com.lucas"></action>
             </intent-filter>
         </receiver>
+        <receiver android:name=".receivers.ProximityReceiver" />
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
