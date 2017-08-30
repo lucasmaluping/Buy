@@ -25,7 +25,7 @@ import java.io.IOException;
 public class AudioService extends Service implements MediaPlayer.OnCompletionListener {
     private static final String TAG = "AudioService";
     MediaPlayer player;
-    private boolean isStop;
+    private boolean isStop ;
     private boolean isPause = false;
     private boolean isPrepared = false;
 
@@ -104,7 +104,6 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
         if (isStop && !isPrepared) {
             try {
                 player.prepare();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -184,7 +183,9 @@ public class AudioService extends Service implements MediaPlayer.OnCompletionLis
     }
 
 
-    // 自定义的线程
+    /**
+     * 发送当前媒体的播放进度
+     */
     private class SeekBarThread implements Runnable {
 
         @Override

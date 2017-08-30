@@ -29,6 +29,7 @@ import com.lucas.buy.activities.BroadCaseTestActivity;
 import com.lucas.buy.activities.EditLineActivity;
 import com.lucas.buy.activities.GPSActivity;
 import com.lucas.buy.activities.HechengActivity;
+import com.lucas.buy.activities.IntentActivity;
 import com.lucas.buy.activities.NotificationActivity;
 import com.lucas.buy.activities.OtherActivity;
 import com.lucas.buy.activities.RecyclerActivity;
@@ -146,6 +147,8 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
                 return false;
             }
         });
+
+
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -280,7 +283,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
 
 
     @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification, R.id.to_hecheng, R.id.to_gps,
-            R.id.stop_play, R.id.pause_play, R.id.start_play, R.id.destroy_service})
+            R.id.stop_play, R.id.pause_play, R.id.start_play, R.id.destroy_service, R.id.to_intent})
     public void onClick(View v) {
         int id = v.getId();
         Log.i(TAG,".....id:" + id);
@@ -315,6 +318,10 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
                 Intent i = new Intent();
                 i.setClass(this.getActivity(), AudioService.class);
                 getActivity().unbindService(conn);
+                break;
+
+            case R.id.to_intent:
+                getActivity().startActivity(new Intent(getActivity(), IntentActivity.class));
                 break;
 
         }

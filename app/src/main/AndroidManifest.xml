@@ -39,6 +39,13 @@
     <!--解锁-->
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"></uses-permission>
 
+    <!--拨打电话 -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <!-- 后台发送短信 -->
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
+
 
     <application
         android:name=".activities.MyApplication"
@@ -72,6 +79,7 @@
         <activity android:name=".activities.NotificationActivity"/>
         <activity android:name=".activities.HechengActivity"/>
         <activity android:name=".activities.GPSActivity"/>
+        <activity android:name=".activities.IntentActivity"/>
 
         <provider
             android:authorities="com.lucas.buy.myProvider"
@@ -92,6 +100,10 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".receivers.ProximityReceiver" />
+
+        <receiver android:name=".activities.IntentActivity$DeliverReceiver"/>
+        <receiver android:name=".activities.IntentActivity$SendReceiver"/>
+
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
