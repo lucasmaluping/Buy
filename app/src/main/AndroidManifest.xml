@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lucas.buy" >
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
 
     //地图包、搜索包需要的基础权限
 
@@ -80,6 +82,7 @@
         <activity android:name=".activities.HechengActivity"/>
         <activity android:name=".activities.GPSActivity"/>
         <activity android:name=".activities.IntentActivity"/>
+        <activity android:name=".activities.BluetoothActivity"/>
 
         <provider
             android:authorities="com.lucas.buy.myProvider"

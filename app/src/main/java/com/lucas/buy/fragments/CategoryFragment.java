@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.lucas.buy.R;
 import com.lucas.buy.activities.AnimActivity;
+import com.lucas.buy.activities.BluetoothActivity;
 import com.lucas.buy.activities.BroadCaseTestActivity;
 import com.lucas.buy.activities.EditLineActivity;
 import com.lucas.buy.activities.GPSActivity;
@@ -283,7 +284,7 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
 
 
     @Override @OnClick({R.id.to_voice_wakeup, R.id.to_notification, R.id.to_hecheng, R.id.to_gps,
-            R.id.stop_play, R.id.pause_play, R.id.start_play, R.id.destroy_service, R.id.to_intent})
+            R.id.stop_play, R.id.pause_play, R.id.start_play, R.id.destroy_service, R.id.to_intent, R.id.to_bluetooth})
     public void onClick(View v) {
         int id = v.getId();
         Log.i(TAG,".....id:" + id);
@@ -322,6 +323,9 @@ public class CategoryFragment extends Fragment implements View.OnClickListener{
 
             case R.id.to_intent:
                 getActivity().startActivity(new Intent(getActivity(), IntentActivity.class));
+                break;
+            case R.id.to_bluetooth:
+                getActivity().startActivity(new Intent(getActivity(), BluetoothActivity.class));
                 break;
 
         }
